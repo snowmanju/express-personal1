@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\data_sync_service.py
+# hypothesis_version: 6.151.2
+
+[100, 1000, 10000, 'active_listeners', 'after_delete', 'after_insert', 'after_update', 'cache_hit_rate', 'cache_hits', 'cache_misses', 'cache_size', 'cache_status', 'created_at', 'customer_code', 'data', 'delete', 'dimensions', 'error', 'goods_code', 'healthy', 'height', 'id', 'insert', 'last_sync_time', 'length', 'manifest_date', 'manifest_id', 'on_manifest_changed', 'operation', 'package_number', 'pending_operations', 'special_fee', 'statistics', 'status', 'success', 'sync_operations', 'sync_status', 'timestamp', 'tracking_number', 'transport_code', 'update', 'updated_at', 'warning', 'weight', 'width', '已失效所有缓存', '数据同步服务初始化完成', '数据库事件监听器注册成功', '理货单不存在']

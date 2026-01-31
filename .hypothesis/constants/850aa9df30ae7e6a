@@ -1,0 +1,4 @@
+# file: E:\kiro\app\core\config_simple.py
+# hypothesis_version: 6.151.2
+
+[1024, '.csv', '.xls', '.xlsx', '/api/v1', 'DATABASE_URL', 'HS256', 'INFO', 'KUAIDI100_CUSTOMER', 'KUAIDI100_KEY', 'KUAIDI100_SECRET', 'KUAIDI100_USERID', 'LOG_LEVEL', 'SECRET_KEY', 'fypLxFrg3636', 'uploads', '快递查询网站']

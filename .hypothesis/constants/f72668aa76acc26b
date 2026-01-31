@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\intelligent_query_service.py
+# hypothesis_version: 6.151.2
+
+[100, 'auto', 'company_code', 'company_name', 'created_at', 'customer_code', 'delete', 'dimensions', 'error', 'failed_count', 'goods_code', 'height', 'id', 'insert', 'length', 'manifest_date', 'manifest_info', 'not_found', 'operation', 'original', 'package', 'package_number', 'query_time', 'query_type', 'results', 'special_fee', 'status', 'success', 'success_count', 'sync_statistics', 'total', 'total_manifests', 'tracking_info', 'tracking_number', 'tracks', 'transport_code', 'update', 'updated_at', 'weight', 'width', 'with_package_number', '快递单号列表不能为空', '手机号', '批量查询数量不能超过100个', '查询异常', '系统异常，请稍后重试', '统计信息获取失败']

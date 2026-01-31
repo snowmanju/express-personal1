@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\manifest_storage.py
+# hypothesis_version: 6.151.2
+
+['%Y-%m-%d', 'created_at', 'customer_code', 'goods_code', 'height', 'length', 'manifest_date', 'package_number', 'tracking_number', 'transport_code', 'updated_at', 'weight', 'width', '客户代码', '宽度', '快递单号', '理货日期', '货物代码', '运输代码', '重量', '长度', '集包单号', '高度']

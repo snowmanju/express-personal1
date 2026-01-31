@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\data_validator.py
+# hypothesis_version: 6.151.2
+
+[999999.99, 999999.999, '%Y-%m-%d', '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y', '^[A-Za-z0-9]+$', 'customer_code', 'date', 'formats', 'goods_code', 'height', 'length', 'manifest_date', 'max', 'max_length', 'min', 'numeric', 'package_number', 'pattern', 'required', 'string', 'tracking_number', 'transport_code', 'type', 'weight', 'width', '客户代码', '宽度', '快递单号', '理货日期', '货物代码', '运输代码', '重量', '长度', '集包单号', '高度']

@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\csv_processor.py
+# hypothesis_version: 6.151.2
+
+[0.0, 500, 1000, 1024, '.csv', '.xls', '.xlsx', 'CSV文件内容为空', 'Excel文件内容为空', 'UTF-8编码失败，尝试GBK编码', 'ValidationResult', 'customer_code', 'data', 'errors', 'gbk', 'goods_code', 'height', 'is_valid', 'length', 'manifest_date', 'openpyxl', 'package_number', 'row_number', 'tracking_number', 'transport_code', 'utf-8', 'weight', 'width', '保存模式处理完成，没有有效记录需要保存', '列结构验证通过', '客户代码', '宽度', '开始解析CSV文件，尝试UTF-8编码', '开始解析Excel文件', '开始验证列结构', '快递单号', '理货日期', '货物代码', '运输代码', '重量', '长度', '集包单号', '高度']

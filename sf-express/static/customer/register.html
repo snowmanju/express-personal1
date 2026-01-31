@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户注册 - 智能物流追踪系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #00f2fe;
+            --secondary-color: #4facfe;
+            --dark-bg: #0a0e27;
+            --card-bg: rgba(15, 23, 42, 0.9);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 40px 20px;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 242, 254, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(79, 172, 254, 0.15) 0%, transparent 50%);
+            animation: float 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, -50px); }
+        }
+
+        .register-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .register-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
+        }
+
+        .register-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .register-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 25px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .terms-checkbox input {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .terms-checkbox a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 12px;
+            color: var(--dark-bg);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+        .register-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .login-link {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-home a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .back-home a:hover {
+            color: var(--primary-color);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 40px 30px;
+            }
+
+            .register-title {
+                font-size: 24px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="register-container">
+        <div class="register-card">
+            <div class="logo-section">
+                <div class="logo-icon">✨</div>
+                <h1 class="register-title">客户注册</h1>
+                <p class="register-subtitle">创建您的账户，开始使用我们的服务</p>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <form id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">姓名</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="fullname"
+                            placeholder="请输入姓名"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">用户名</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="username"
+                            placeholder="请输入用户名"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">邮箱</label>
+                    <input 
+                        type="email" 
+                        class="form-input" 
+                        id="email"
+                        placeholder="请输入邮箱地址"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <input 
+                        type="tel" 
+                        class="form-input" 
+                        id="phone"
+                        placeholder="请输入手机号"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">密码</label>
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            id="password"
+                            placeholder="请输入密码"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">确认密码</label>
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            id="confirmPassword"
+                            placeholder="请再次输入密码"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        我已阅读并同意 <a href="/terms.html">服务条款</a> 和 <a href="/privacy.html">隐私政策</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="register-btn" id="registerBtn">
+                    <span id="btnText">注册</span>
+                </button>
+
+                <div class="login-link">
+                    已有账户？ <a href="/customer/login.html">立即登录</a>
+                </div>
+            </form>
+
+            <div class="back-home">
+                <a href="/">← 返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class CustomerRegister {
+            constructor() {
+                this.form = document.getElementById('registerForm');
+                this.registerBtn = document.getElementById('registerBtn');
+                this.btnText = document.getElementById('btnText');
+                this.alertContainer = document.getElementById('alertContainer');
+
+                this.initEvents();
+            }
+
+            initEvents() {
+                this.form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegister();
+                });
+
+                // 实时密码匹配验证
+                document.getElementById('confirmPassword').addEventListener('input', () => {
+                    this.validatePasswordMatch();
+                });
+            }
+
+            validatePasswordMatch() {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (confirmPassword && password !== confirmPassword) {
+                    document.getElementById('confirmPassword').style.borderColor = '#ef4444';
+                } else {
+                    document.getElementById('confirmPassword').style.borderColor = 'rgba(0, 242, 254, 0.2)';
+                }
+            }
+
+            async handleRegister() {
+                const fullname = document.getElementById('fullname').value.trim();
+                const username = document.getElementById('username').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const terms = document.getElementById('terms').checked;
+
+                // 验证
+                if (!fullname || !username || !email || !phone || !password) {
+                    this.showAlert('请填写所有必填项', 'error');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    this.showAlert('密码长度至少为6位', 'error');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    this.showAlert('两次输入的密码不一致', 'error');
+                    return;
+                }
+
+                if (!terms) {
+                    this.showAlert('请阅读并同意服务条款和隐私政策', 'error');
+                    return;
+                }
+
+                try {
+                    this.setLoading(true);
+                    this.clearAlert();
+
+                    // TODO: 实现实际的客户注册API调用
+                    const response = await fetch('/api/v1/customer/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            fullname: fullname,
+                            username: username,
+                            email: email,
+                            phone: phone,
+                            password: password
+                        })
+                    });
+
+                    if (response.ok) {
+                        this.showAlert('注册成功！正在跳转到登录页面...', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = '/customer/login.html';
+                        }, 2000);
+                    } else {
+                        const error = await response.json();
+                        this.showAlert(error.detail || '注册失败，请稍后重试', 'error');
+                    }
+
+                } catch (error) {
+                    console.error('Register error:', error);
+                    // 临时：由于API未实现，显示提示信息
+                    this.showAlert('客户注册功能开发中，请联系管理员开通账户', 'error');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            setLoading(isLoading) {
+                if (isLoading) {
+                    this.registerBtn.disabled = true;
+                    this.btnText.textContent = '注册中...';
+                } else {
+                    this.registerBtn.disabled = false;
+                    this.btnText.textContent = '注册';
+                }
+            }
+
+            showAlert(message, type) {
+                this.alertContainer.innerHTML = `
+                    <div class="alert ${type} show">
+                        ${message}
+                    </div>
+                `;
+            }
+
+            clearAlert() {
+                this.alertContainer.innerHTML = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new CustomerRegister();
+        });
+    </script>
+</body>
+</html>

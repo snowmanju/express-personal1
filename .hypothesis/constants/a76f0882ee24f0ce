@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\file_processor_service.py
+# hypothesis_version: 6.151.2
+
+[999999.99, 999999.999, 99999999.99, 100, '%Y-%m-%d', '.', '.csv', '.xls', '.xlsx', '^[A-Za-z0-9]+$', 'columns', 'customer_code', 'data', 'date', 'decimal', 'errors', 'format', 'gbk', 'goods_code', 'height', 'inserted', 'invalid_rows', 'length', 'manifest_date', 'max', 'max_length', 'min', 'package_number', 'pattern', 'precision', 'preview_data', 'required', 'row_number', 'skipped', 'special_fee', 'string', 'success', 'total', 'total_rows', 'tracking_number', 'transport_code', 'type', 'updated', 'utf-8', 'valid', 'valid_rows', 'warnings', 'weight', 'width', '客户代码', '宽度', '快递单号', '数据库会话未初始化', '文件中没有有效的数据行', '文件内容为空', '文件编码错误，请使用UTF-8编码', '特殊费用', '理货日期', '货物代码', '运输代码', '重量', '长度', '集包单号', '高度']

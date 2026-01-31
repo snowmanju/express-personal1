@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\csv_processor.py
+# hypothesis_version: 6.151.2
+
+['.csv', '.xls', '.xlsx', 'CSV文件内容为空', 'Excel文件内容为空', 'customer_code', 'gbk', 'goods_code', 'height', 'length', 'manifest_date', 'package_number', 'tracking_number', 'transport_code', 'utf-8', 'weight', 'width', '客户代码', '宽度', '快递单号', '理货日期', '货物代码', '运输代码', '重量', '长度', '集包单号', '高度']

@@ -1,0 +1,52 @@
+# Docker Compose配置文件 - 开发环境
+version: '3.8'
+
+services:
+  # 快递查询网站应用 - 开发模式
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: express-tracking-app-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/express_tracking
+      - SECRET_KEY=dev-secret-key-not-for-production
+      - KUAIDI100_KEY=${KUAIDI100_KEY:-fypLxFrg3636}
+      - KUAIDI100_CUSTOMER=${KUAIDI100_CUSTOMER:-3564B6CF145FA93724CE18C1FB149036}
+      - KUAIDI100_SECRET=${KUAIDI100_SECRET:-8fa1052ba57e4d9ca0427938a77e2e30}
+      - KUAIDI100_USERID=${KUAIDI100_USERID:-a1ffc21f3de94cf5bdd908faf3bbc81d}
+      - LOG_LEVEL=DEBUG
+      - ENVIRONMENT=development
+    volumes:
+      - .:/app
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      - db
+    networks:
+      - express-tracking-dev-network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # MySQL数据库 - 开发环境
+  db:
+    image: mysql:8.0
+    container_name: express-tracking-db-dev
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=express_tracking
+    volumes:
+      - mysql_dev_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - express-tracking-dev-network
+
+volumes:
+  mysql_dev_data:
+    driver: local
+
+networks:
+  express-tracking-dev-network:
+    driver: bridge

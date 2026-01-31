@@ -1,0 +1,4 @@
+# file: E:\kiro\app\models\admin_user.py
+# hypothesis_version: 6.151.2
+
+[255, 'admin_users', '创建时间', '密码哈希', '最后登录时间', '用户名']

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录跳转诊断工具</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        #log {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 登录跳转诊断工具</h1>
+        
+        <div class="test-section">
+            <h3>步骤 1: 测试登录API</h3>
+            <button onclick="testLogin()">测试登录</button>
+            <div id="loginResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>步骤 2: 检查Token存储</h3>
+            <button onclick="checkTokenStorage()">检查Token</button>
+            <div id="tokenResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>步骤 3: 测试Token验证</h3>
+            <button onclick="testTokenValidation()">验证Token</button>
+            <div id="validationResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>步骤 4: 测试跳转</h3>
+            <button onclick="testRedirect()">测试跳转到仪表板</button>
+            <div id="redirectResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>步骤 5: 检查浏览器控制台</h3>
+            <button onclick="checkConsole()">查看控制台日志</button>
+            <div id="consoleResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>完整日志</h3>
+            <button onclick="clearLog()">清除日志</button>
+            <div id="log"></div>
+        </div>
+    </div>
+
+    <script>
+        let logMessages = [];
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            logMessages.push(logEntry);
+            
+            const logDiv = document.getElementById('log');
+            const color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#333';
+            logDiv.innerHTML += `<div style="color: ${color}">${logEntry}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function clearLog() {
+            logMessages = [];
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        async function testLogin() {
+            const resultDiv = document.getElementById('loginResult');
+            resultDiv.innerHTML = '<p class="info">正在测试登录...</p>';
+            log('开始测试登录API');
+            
+            try {
+                const response = await fetch('/api/v1/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'admin123'
+                    })
+                });
+                
+                log(`登录API响应状态: ${response.status}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log('登录成功，收到Token', 'success');
+                    log(`Token: ${data.access_token.substring(0, 50)}...`);
+                    
+                    // 保存token到localStorage
+                    localStorage.setItem('admin_token', data.access_token);
+                    log('Token已保存到localStorage');
+                    
+                    resultDiv.innerHTML = `
+                        <p class="success">✓ 登录成功！</p>
+                        <p>Token: ${data.access_token.substring(0, 50)}...</p>
+                        <p>Token已保存到localStorage</p>
+                    `;
+                } else {
+                    const error = await response.json();
+                    log(`登录失败: ${JSON.stringify(error)}`, 'error');
+                    resultDiv.innerHTML = `<p class="error">✗ 登录失败: ${error.detail || '未知错误'}</p>`;
+                }
+            } catch (error) {
+                log(`登录请求异常: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<p class="error">✗ 请求失败: ${error.message}</p>`;
+            }
+        }
+        
+        function checkTokenStorage() {
+            const resultDiv = document.getElementById('tokenResult');
+            log('检查Token存储');
+            
+            const localToken = localStorage.getItem('admin_token');
+            const sessionToken = sessionStorage.getItem('admin_token');
+            
+            let html = '<h4>存储检查结果:</h4>';
+            
+            if (localToken) {
+                log('在localStorage中找到Token', 'success');
+                html += `<p class="success">✓ localStorage中有Token</p>`;
+                html += `<p>Token: ${localToken.substring(0, 50)}...</p>`;
+            } else {
+                log('localStorage中没有Token', 'error');
+                html += `<p class="error">✗ localStorage中没有Token</p>`;
+            }
+            
+            if (sessionToken) {
+                log('在sessionStorage中找到Token', 'success');
+                html += `<p class="success">✓ sessionStorage中有Token</p>`;
+                html += `<p>Token: ${sessionToken.substring(0, 50)}...</p>`;
+            } else {
+                log('sessionStorage中没有Token');
+                html += `<p class="info">sessionStorage中没有Token</p>`;
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        async function testTokenValidation() {
+            const resultDiv = document.getElementById('validationResult');
+            resultDiv.innerHTML = '<p class="info">正在验证Token...</p>';
+            log('开始验证Token');
+            
+            const token = localStorage.getItem('admin_token') || sessionStorage.getItem('admin_token');
+            
+            if (!token) {
+                log('没有找到Token', 'error');
+                resultDiv.innerHTML = '<p class="error">✗ 没有Token，请先登录</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/v1/admin/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                log(`Token验证API响应状态: ${response.status}`);
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    log(`Token验证成功，用户: ${userData.username}`, 'success');
+                    resultDiv.innerHTML = `
+                        <p class="success">✓ Token验证成功！</p>
+                        <p>用户名: ${userData.username}</p>
+                        <pre>${JSON.stringify(userData, null, 2)}</pre>
+                    `;
+                } else {
+                    const error = await response.json();
+                    log(`Token验证失败: ${JSON.stringify(error)}`, 'error');
+                    resultDiv.innerHTML = `<p class="error">✗ Token验证失败: ${error.detail || '未知错误'}</p>`;
+                }
+            } catch (error) {
+                log(`Token验证请求异常: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<p class="error">✗ 请求失败: ${error.message}</p>`;
+            }
+        }
+        
+        function testRedirect() {
+            const resultDiv = document.getElementById('redirectResult');
+            log('测试跳转到仪表板');
+            
+            const token = localStorage.getItem('admin_token') || sessionStorage.getItem('admin_token');
+            
+            if (!token) {
+                log('没有Token，无法跳转', 'error');
+                resultDiv.innerHTML = '<p class="error">✗ 没有Token，请先登录</p>';
+                return;
+            }
+            
+            log('准备跳转到 /admin/dashboard.html');
+            resultDiv.innerHTML = '<p class="info">3秒后将跳转到仪表板...</p>';
+            
+            setTimeout(() => {
+                log('执行跳转', 'success');
+                window.location.href = '/admin/dashboard.html';
+            }, 3000);
+        }
+        
+        function checkConsole() {
+            const resultDiv = document.getElementById('consoleResult');
+            log('检查浏览器控制台');
+            
+            resultDiv.innerHTML = `
+                <p class="info">请打开浏览器开发者工具（F12）查看控制台</p>
+                <p>查找以下信息：</p>
+                <ul>
+                    <li>JavaScript错误</li>
+                    <li>网络请求失败</li>
+                    <li>CORS错误</li>
+                    <li>404错误</li>
+                </ul>
+                <p>当前页面URL: <code>${window.location.href}</code></p>
+            `;
+            
+            console.log('=== 诊断信息 ===');
+            console.log('当前URL:', window.location.href);
+            console.log('localStorage Token:', localStorage.getItem('admin_token'));
+            console.log('sessionStorage Token:', sessionStorage.getItem('admin_token'));
+            console.log('User Agent:', navigator.userAgent);
+        }
+        
+        // 页面加载时自动检查
+        window.addEventListener('DOMContentLoaded', () => {
+            log('诊断工具已加载');
+            log(`当前URL: ${window.location.href}`);
+            checkTokenStorage();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+# file: E:\kiro\app\models\api_config.py
+# hypothesis_version: 6.151.2
+
+[255, 'api_config', '创建时间', '更新时间', '配置值', '配置描述', '配置键']

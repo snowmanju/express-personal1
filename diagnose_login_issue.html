@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录问题诊断工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #00f2fe;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #4facfe;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .test-item .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .test-item .label {
+            flex: 1;
+        }
+
+        .test-item .status {
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .status.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .status.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status.pending {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            border: none;
+            color: #0a0e27;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .log-container {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+        }
+
+        .log-entry.error {
+            color: #ef4444;
+        }
+
+        .log-entry.success {
+            color: #10b981;
+        }
+
+        .log-entry.warning {
+            color: #f59e0b;
+        }
+
+        .info-box {
+            background: rgba(79, 172, 254, 0.1);
+            border-left: 4px solid #4facfe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .info-box h3 {
+            color: #4facfe;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #94a3b8;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 登录问题诊断工具</h1>
+        <p class="subtitle">自动检测登录和认证流程中的问题</p>
+
+        <div class="section">
+            <h2>环境检测</h2>
+            <div id="envTests"></div>
+        </div>
+
+        <div class="section">
+            <h2>API连接测试</h2>
+            <div id="apiTests"></div>
+            <button class="btn" onclick="testAPI()">测试API连接</button>
+        </div>
+
+        <div class="section">
+            <h2>登录流程测试</h2>
+            <div id="loginTests"></div>
+            <button class="btn" onclick="testLogin()">测试登录流程</button>
+            <button class="btn" onclick="testManualAccess()">测试手动访问仪表板</button>
+        </div>
+
+        <div class="section">
+            <h2>诊断日志</h2>
+            <div class="log-container" id="logContainer"></div>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 使用说明</h3>
+            <ul>
+                <li>点击"测试API连接"检查后端服务是否正常</li>
+                <li>点击"测试登录流程"模拟完整的登录过程</li>
+                <li>点击"测试手动访问仪表板"验证Token是否有效</li>
+                <li>查看诊断日志了解详细的测试过程</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const logs = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = `[${timestamp}] ${message}`;
+            logs.push({ message: entry, type });
+            
+            const logContainer = document.getElementById('logContainer');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = entry;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            console.log(entry);
+        }
+
+        function updateTestStatus(containerId, testName, status, message) {
+            const container = document.getElementById(containerId);
+            const testItem = document.createElement('div');
+            testItem.className = 'test-item';
+            
+            const icon = status === 'success' ? '✅' : status === 'error' ? '❌' : status === 'warning' ? '⚠️' : '⏳';
+            
+            testItem.innerHTML = `
+                <div class="icon">${icon}</div>
+                <div class="label">${testName}</div>
+                <div class="status ${status}">${message}</div>
+            `;
+            
+            container.appendChild(testItem);
+        }
+
+        // 环境检测
+        function checkEnvironment() {
+            const envTests = document.getElementById('envTests');
+            envTests.innerHTML = '';
+            
+            log('开始环境检测...', 'info');
+            
+            // 检测浏览器
+            const browser = navigator.userAgent;
+            updateTestStatus('envTests', '浏览器', 'success', browser.split(' ').pop());
+            log(`浏览器: ${browser}`, 'info');
+            
+            // 检测localStorage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                updateTestStatus('envTests', 'localStorage支持', 'success', '可用');
+                log('localStorage: 可用', 'success');
+            } catch (e) {
+                updateTestStatus('envTests', 'localStorage支持', 'error', '不可用');
+                log('localStorage: 不可用 - ' + e.message, 'error');
+            }
+            
+            // 检测sessionStorage
+            try {
+                sessionStorage.setItem('test', 'test');
+                sessionStorage.removeItem('test');
+                updateTestStatus('envTests', 'sessionStorage支持', 'success', '可用');
+                log('sessionStorage: 可用', 'success');
+            } catch (e) {
+                updateTestStatus('envTests', 'sessionStorage支持', 'error', '不可用');
+                log('sessionStorage: 不可用 - ' + e.message, 'error');
+            }
+            
+            // 检测现有Token
+            const localToken = localStorage.getItem('admin_token');
+            const sessionToken = sessionStorage.getItem('admin_token');
+            
+            if (localToken) {
+                updateTestStatus('envTests', '现有Token (localStorage)', 'success', '存在');
+                log('localStorage中存在Token', 'success');
+            } else {
+                updateTestStatus('envTests', '现有Token (localStorage)', 'warning', '不存在');
+                log('localStorage中无Token', 'warning');
+            }
+            
+            if (sessionToken) {
+                updateTestStatus('envTests', '现有Token (sessionStorage)', 'success', '存在');
+                log('sessionStorage中存在Token', 'success');
+            } else {
+                updateTestStatus('envTests', '现有Token (sessionStorage)', 'warning', '不存在');
+                log('sessionStorage中无Token', 'warning');
+            }
+        }
+
+        // 测试API连接
+        async function testAPI() {
+            const apiTests = document.getElementById('apiTests');
+            apiTests.innerHTML = '';
+            
+            log('开始API连接测试...', 'info');
+            
+            // 测试根路径
+            try {
+                const response = await fetch('/');
+                if (response.ok) {
+                    updateTestStatus('apiTests', '根路径访问', 'success', `${response.status} OK`);
+                    log('根路径访问: 成功', 'success');
+                } else {
+                    updateTestStatus('apiTests', '根路径访问', 'error', `${response.status}`);
+                    log(`根路径访问: 失败 (${response.status})`, 'error');
+                }
+            } catch (e) {
+                updateTestStatus('apiTests', '根路径访问', 'error', '连接失败');
+                log('根路径访问: 连接失败 - ' + e.message, 'error');
+            }
+            
+            // 测试登录API
+            try {
+                const response = await fetch('/api/v1/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'test', password: 'test' })
+                });
+                
+                if (response.status === 401 || response.status === 400) {
+                    updateTestStatus('apiTests', '登录API端点', 'success', '可访问');
+                    log('登录API端点: 可访问', 'success');
+                } else if (response.ok) {
+                    updateTestStatus('apiTests', '登录API端点', 'success', '可访问');
+                    log('登录API端点: 可访问', 'success');
+                } else {
+                    updateTestStatus('apiTests', '登录API端点', 'warning', `${response.status}`);
+                    log(`登录API端点: 状态码 ${response.status}`, 'warning');
+                }
+            } catch (e) {
+                updateTestStatus('apiTests', '登录API端点', 'error', '连接失败');
+                log('登录API端点: 连接失败 - ' + e.message, 'error');
+            }
+        }
+
+        // 测试登录流程
+        async function testLogin() {
+            const loginTests = document.getElementById('loginTests');
+            loginTests.innerHTML = '';
+            
+            log('开始登录流程测试...', 'info');
+            log('使用账号: admin / admin123', 'info');
+            
+            try {
+                // 步骤1: 发送登录请求
+                log('步骤1: 发送登录请求...', 'info');
+                const response = await fetch('/api/v1/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'admin123'
+                    })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    updateTestStatus('loginTests', '登录请求', 'error', `失败: ${error.detail || '未知错误'}`);
+                    log(`登录请求失败: ${error.detail || '未知错误'}`, 'error');
+                    return;
+                }
+                
+                const data = await response.json();
+                updateTestStatus('loginTests', '登录请求', 'success', '成功');
+                log('登录请求: 成功', 'success');
+                
+                // 步骤2: 保存Token
+                log('步骤2: 保存Token到localStorage...', 'info');
+                const token = data.access_token;
+                log(`Token: ${token.substring(0, 50)}...`, 'info');
+                
+                localStorage.setItem('admin_token', token);
+                
+                // 验证保存
+                const savedToken = localStorage.getItem('admin_token');
+                if (savedToken === token) {
+                    updateTestStatus('loginTests', 'Token保存', 'success', '成功');
+                    log('Token保存: 成功', 'success');
+                } else {
+                    updateTestStatus('loginTests', 'Token保存', 'error', '失败');
+                    log('Token保存: 失败', 'error');
+                    return;
+                }
+                
+                // 步骤3: 等待200ms
+                log('步骤3: 等待200ms...', 'info');
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
+                // 步骤4: 验证Token
+                log('步骤4: 验证Token...', 'info');
+                const verifyResponse = await fetch('/api/v1/admin/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (verifyResponse.ok) {
+                    const user = await verifyResponse.json();
+                    updateTestStatus('loginTests', 'Token验证', 'success', `成功 (用户: ${user.username})`);
+                    log(`Token验证: 成功 (用户: ${user.username})`, 'success');
+                    
+                    // 步骤5: 测试跳转
+                    updateTestStatus('loginTests', '跳转测试', 'success', '可以跳转到仪表板');
+                    log('跳转测试: Token有效，可以访问仪表板', 'success');
+                    log('', 'info');
+                    log('✅ 登录流程测试通过！', 'success');
+                    log('💡 建议: 点击"测试手动访问仪表板"按钮验证', 'info');
+                } else {
+                    updateTestStatus('loginTests', 'Token验证', 'error', `失败 (${verifyResponse.status})`);
+                    log(`Token验证: 失败 (${verifyResponse.status})`, 'error');
+                }
+                
+            } catch (e) {
+                updateTestStatus('loginTests', '登录流程', 'error', '异常');
+                log('登录流程异常: ' + e.message, 'error');
+            }
+        }
+
+        // 测试手动访问仪表板
+        async function testManualAccess() {
+            log('测试手动访问仪表板...', 'info');
+            
+            const token = localStorage.getItem('admin_token') || sessionStorage.getItem('admin_token');
+            
+            if (!token) {
+                log('❌ 未找到Token，请先运行"测试登录流程"', 'error');
+                alert('未找到Token，请先运行"测试登录流程"');
+                return;
+            }
+            
+            log('找到Token，尝试访问仪表板...', 'info');
+            log('', 'info');
+            log('✅ Token存在，可以手动访问仪表板', 'success');
+            log('💡 即将在新标签页打开仪表板...', 'info');
+            
+            setTimeout(() => {
+                window.open('/admin/dashboard.html', '_blank');
+            }, 1000);
+        }
+
+        // 页面加载时自动运行环境检测
+        window.addEventListener('DOMContentLoaded', () => {
+            checkEnvironment();
+        });
+    </script>
+</body>
+</html>

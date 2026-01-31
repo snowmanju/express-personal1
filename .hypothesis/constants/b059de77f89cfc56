@@ -1,0 +1,4 @@
+# file: E:\kiro\app\services\manifest_service.py
+# hypothesis_version: 6.151.2
+
+[999999.99, 999999.999, 99999999.99, 100, '%Y-%m-%d', '^[A-Za-z0-9]+$', 'created_at', 'customer_code', 'data', 'delete', 'deleted_count', 'deleted_ids', 'desc', 'error', 'errors', 'filters', 'goods_code', 'has_next', 'has_prev', 'height', 'id', 'insert', 'length', 'limit', 'manifest_date', 'message', 'operation', 'package_number', 'package_rate', 'page', 'pagination', 'recent_count', 'search_query', 'special_fee', 'success', 'sync_statistics', 'total_count', 'total_pages', 'tracking_number', 'transport_code', 'update', 'updated_at', 'weight', 'width', 'with_package_count', '客户代码', '宽度', '快递单号', '快递单号只能包含字母和数字', '快递单号已存在', '快递单号已被其他记录使用', '数据库会话未初始化', '未找到对应的理货单', '未找到要删除的记录', '未指定要删除的记录', '特殊费用', '理货单不存在', '理货单创建成功', '理货单删除成功', '理货单更新成功', '理货日期', '理货日期格式不正确', '货物代码', '运输代码', '重量', '长度', '集包单号', '高度']
